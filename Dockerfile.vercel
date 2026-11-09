@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app ./app
+COPY frontend ./frontend
+COPY html-frontend ./html-frontend
+
+# On Vercel one container serves both the API (/api/...) and the HTML
+# frontend (/), replacing the nginx service from docker-compose.
+# Vercel routes traffic to port 80.
+# Set OPENAI_API_KEY, GOOGLE_MAPS_KEY and OPENWEATHER_KEY as Vercel
+# project environment variables (see .env.example).
+ENV PORT=80
+EXPOSE 80
+
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
