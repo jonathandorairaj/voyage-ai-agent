@@ -170,7 +170,7 @@ For local development, see the section below.
 
 ## Deploying to Vercel
 
-`Dockerfile.vercel` builds a single container that serves both the API (`/api/...`) and the HTML frontend (`/`), so no nginx is needed. Import the repo at [vercel.com/new](https://vercel.com/new) and set the environment variables listed in `.env.example` (`OPENAI_API_KEY`, `GOOGLE_MAPS_KEY`, `OPENWEATHER_KEY`) under **Settings → Environment Variables**. Telemetry export stays off unless `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
+Vercel runs the app with its native FastAPI support (Framework Preset: FastAPI), so no Dockerfile or nginx is needed: one function serves both the API (`/api/...`) and the HTML frontend (`/`). Import the repo at [vercel.com/new](https://vercel.com/new) and set the environment variables listed in `.env.example` (`OPENAI_API_KEY`, `GOOGLE_MAPS_KEY`, `OPENWEATHER_KEY`) under **Settings → Environment Variables**. Telemetry export stays off unless `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
 
 ---
 
