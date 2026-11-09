@@ -168,17 +168,24 @@ For local development, see the section below.
 
 ---
 
+## Deploying to Vercel
+
+`Dockerfile.vercel` builds a single container that serves both the API (`/api/...`) and the HTML frontend (`/`), so no nginx is needed. Import the repo at [vercel.com/new](https://vercel.com/new) and set the environment variables listed in `.env.example` (`OPENAI_API_KEY`, `GOOGLE_MAPS_KEY`, `OPENWEATHER_KEY`) under **Settings → Environment Variables**. Telemetry export stays off unless `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
+
+---
+
 ## Running locally (without Docker)
 
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
-# Start the API
+# Add your API keys
+cp .env.example .env
+
+# Start the API and frontend
 uvicorn app.main:app --reload --port 8000
 ```
 
-Open `html-frontend/index.html` directly in a browser, or serve it with any static file server.
-
-> The frontend calls `/api/...` — if running locally you may need to update the `API` constant in `index.html` to point to `http://localhost:8000/api`.
+Then open [http://localhost:8000](http://localhost:8000). The API serves `html-frontend/` at `/`, so the frontend's `/api/...` calls work as they are.
 

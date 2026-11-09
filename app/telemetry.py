@@ -17,10 +17,15 @@ logger = logging.getLogger(__name__)
 def setup_telemetry() -> None:
     """
     Initialise OpenTelemetry traces and metrics.
-    Exporters point to the OTLP HTTP endpoint (default: localhost:4318),
-    which is what grafana/otel-lgtm exposes out of the box.
+    Exporters point to the OTLP HTTP endpoint in OTEL_EXPORTER_OTLP_ENDPOINT
+    (e.g. grafana/otel-lgtm on localhost:4318). When it's unset (e.g. on
+    Vercel) telemetry stays off and the meters below are no-ops.
     """
-    endpoint    = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318")
+    endpoint    = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+    if not endpoint:
+        logger.info("OTEL_EXPORTER_OTLP_ENDPOINT not set — telemetry export disabled")
+        return
+
     service     = os.getenv("OTEL_SERVICE_NAME", "voyage-api")
     environment = os.getenv("ENVIRONMENT", "development")
 
