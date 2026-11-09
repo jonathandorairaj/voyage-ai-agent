@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, Response
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
@@ -88,3 +91,9 @@ async def plan_trip_stream(request: TripRequest):
 
 
 app.include_router(router)
+
+# Serve the HTML frontend from the same app when it's present (Vercel, local
+# runs). With docker-compose, nginx serves it and this directory isn't copied.
+HTML_FRONTEND = Path(__file__).resolve().parent.parent / "html-frontend"
+if HTML_FRONTEND.is_dir():
+    app.mount("/", StaticFiles(directory=HTML_FRONTEND, html=True), name="frontend")
